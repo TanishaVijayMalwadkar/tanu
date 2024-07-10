@@ -5,13 +5,9 @@ def read_csv():
         reader=csv.DictReader(file)
         return list(reader)
     
-    with open(CSV_File,mode='r',newline='')as file:
-        reader=csv.DictReader(file)
-        return list(reader)
-
 def write_csv(data):
     with open(CSV_File,mode='w',newlinw='') as file:
-        write=csv.DictReader(file,filednames=['name','room_no','mobile_no','date','ragistor_no','fees','adress'])
+        writer=csv.DictReader(file,fieldnames=['name','room_no','mobile_no','date','ragistor_no','fees','adress'])
         writer.writeheader()
         writer.writerows(data)
 
@@ -38,47 +34,31 @@ def create_record(name,room_no,mobile_no,date,ragistor_no,fees,adress):
     date.append(new_record)
     write_csv(data)
 
-def read_record():
+def read_record(data):
     """
     Read and Display all the record.
     """
-    srecord=read_csv()
-    if not srecord:
-      print("No record data found:")
-      return 
-    with open(CSV_File,mode='w',newline='')as file:
-       writer=csv.DictWriter(file,feildsname=['regNo','name','address','moNo','crsNm','sem','fee'])
-       writer.writeheader()
-       writer.writerows(data)
-
-def addStudent(regNo,name,address,moNo,crsNm,sem,fee):
-    data=read_csv()
-    new_student={'regNo':regNo, 'name':name, 'address':address, 'moNo':moNo, 'csrNm':crsNm, 'sem':sem, 'fee':fee}
-    data.append(new_student)
-    write_csv(data)
-
-def readStudent():
     students=read_csv()
     if not students:
-        print(" No Stduent Data found:")
-    return
+      print("No record data found:")
+      return 
 
 
     headers=['regNo','name','address','moNo','csrNm','sem','fee']
-    col=widths={header:len(header) for header in headers}
+    col_widths={header:len(header) for header in headers}
     
     for student in students:
         for header in headers:
-            col_widths[header]=max(col_widths[header],len(student[header.lower().replace('','_')]))
-    separator='+-'+'-+-'.join(['-'*col_widths[header] for header in headers])+'|'
-    header_row='| '+' |'.join([header.ljust(col_widths[header]) for header in headers])+'|'
-    print(separator)
-    print(header_row) 
-    print(separator)
-    for student in students:
-        row='| '+' | '.join([student[header.lower().replace(' ','_')].ljust(col_widths[header])for header in headers]) + ' | '
-        print(row)
-    print(separator) 
+            col_widths[header]=max(col_widths[header],len(student[header.lower().replace(' ','_')]))
+        separator='+-'+'-+-'.join(['-'*col_widths[header] for header in headers])+' | '
+        header_row='| '+' |'.join([header.ljust(col_widths[header]) for header in headers])+' | '
+        print(separator)
+        print(header_row) 
+        print(separator)
+        for student in students:
+            row='| '+' | '.join([student[header.lower().replace(' ','_')].ljust(col_widths[header])for header in headers]) + ' | '
+            print(row)
+        print(separator) 
     
 def update_student(Regno,Name=None,Address=None,MoNo=None,CsrNm=None,Sem=None,Fee=None):
     data=read_csv()
